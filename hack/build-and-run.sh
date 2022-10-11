@@ -55,10 +55,12 @@ done < <(find "${SCRIPTDIR}/../src" -mindepth 1 -maxdepth 1 -type d -print0)
 
 log "Successfully built all images."
 
-log "Deploying Otel-Collector and Jaeger:"
+log "Deploying Otel-Collector, Jaeger, and Prometheus:"
 
 docker run -d --rm --network="$networkName" --name jaeger \
   -e COLLECTOR_ZIPKIN_HOST_PORT=:9411 \
+  -e METRICS_STORAGE_TYPE=prometheus \
+  -e PROMETHEUS_SERVER_URL=http://prometheus:9090 \
   -p 5775:5775/udp \
   -p 6831:6831/udp \
   -p 6832:6832/udp \
@@ -68,12 +70,21 @@ docker run -d --rm --network="$networkName" --name jaeger \
   -p 14268:14268 \
   -p 14269:14269 \
   -p 9411:9411 \
-  jaegertracing/all-in-one:1.31 || true
+  jaegertracing/all-in-one:latest || true
+
+log "Deploying Otel-Collector"
+log "$networkName"
 
 containername="$otelCollectorName"
 docker run -d --rm --network="$networkName" \
      --name "$otelCollectorName" \
      "$otelCollectorName:$TAG" >&2 || true
+
+containername=prometheus
+docker run -d --rm --network="$networkName" \
+     --name "$containername" \
+     -p 9090:9090 \
+     "$containername:$TAG" >&2 || true
 
 
 log "Deploying Online Boutique:"

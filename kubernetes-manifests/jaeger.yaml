@@ -19,6 +19,10 @@ spec:
         env:
         - name: COLLECTOR_ZIPKIN_HOST_PORT
           value: ":9411"
+        - name: METRICS_STORAGE_TYPE
+          value: "prometheus"
+        - name: PROMETHEUS_SERVER_URL
+          value: "http://prometheus:9090"
         ports:
         - containerPort: 5775
         - containerPort: 6831

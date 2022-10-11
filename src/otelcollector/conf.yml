@@ -1,8 +1,22 @@
 receivers:
+# Dummy receiver that's never used, because a pipeline is required to have one.
+  otlp/spanmetrics:
+    protocols:
+      grpc:
+        endpoint: "localhost:12345"
   otlp:
     protocols:
       grpc:
       http:
+
+processors:
+  spanmetrics:
+    metrics_exporter: prometheusremotewrite
+    latency_histogram_buckets: [100us, 2ms, 4ms, 6ms, 8ms, 10ms, 50ms, 100ms, 200ms, 400ms, 800ms, 1s, 1400ms, 2s, 5s, 10s]
+    dimensions:
+      - name: http.url
+        default: /
+      - name: http.status_code 
 
 exporters:
   jaeger:
@@ -12,9 +26,27 @@ exporters:
   logging:
     loglevel: debug
 
+  otlp/spanmetrics:
+    endpoint: "localhost:55677"
+    tls:
+      insecure: true
+
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+
+  prometheusremotewrite:
+    endpoint: "http://prometheus:9090/api/v1/write"
+
 service:
   pipelines:
     traces:
       receivers: [otlp]
-      processors: []
-      exporters: [logging,jaeger]
+      processors: [spanmetrics]
+      exporters: [logging, jaeger]
+
+    metrics:
+      # This receiver is just a dummy and never used.
+      # Added to pass validation requiring at least one receiver in a pipeline.
+      receivers: [otlp/spanmetrics]
+      # The metrics_exporter must be present in this list.
+      exporters: [prometheusremotewrite, logging]

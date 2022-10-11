@@ -63,6 +63,7 @@ deploy:
     - ./kubernetes-manifests/otelcollector.yaml
     - ./kubernetes-manifests/paymentservice.yaml
     - ./kubernetes-manifests/productcatalogservice.yaml
+    - ./kubernetes-manifests/prometheus.yaml
     - ./kubernetes-manifests/recommendationservice.yaml
     - ./kubernetes-manifests/redis.yaml
     - ./kubernetes-manifests/shippingservice.yaml
