@@ -4,7 +4,7 @@
 
 ---
 
-## This microservice demo application has been forked from @julianocosta89's repo to add span-metric processing cababilities. Building upon Juliano's Otel integration, I have included a Prometheus manifest configured for remote-writing. Additionaly, the Otel pipeline has been updated to include a span-metrics-processor, enabling span performance profiling. 
+## This microservice demo application has been forked from @julianocosta89's repo to add span-metric processing cababilities. Building upon Juliano's Otel integration, I have included a Prometheus manifest configured for remote-writing. Additionally, the Otel pipeline has been updated to include a span-metrics-processor, enabling span performance profiling. 
 All the services had their OpenCensus, Cloud Operations (Stackdriver) removed. Only OpenTelemetry Traces were added.   
 
 ---
@@ -40,7 +40,7 @@ If you want to test it locally without a kubernetes cluster, you can follow the 
 1. **Clone this repository.**
 
 ```
-git clone https://github.com/julianocosta89/opentelemetry-microservices-demo.git
+git clone https://github.com/codyhartsook/opentelemetry-microservices-demo.git
 cd opentelemetry-microservices-demo
 ```
 
@@ -91,6 +91,21 @@ To kill all containers, simply run [hack/kill-containers.sh.](hack/kill-containe
 ./kill-containers.sh
 ```
 
+## Kubernetes
+
+1. If you are using a locally hosted cluster such as KinD, Skaffold will build and push images to the local cluster: 
+```
+skaffold dev
+```
+
+2. If you are deploying against a remote cluster such as GKE, EKS, AKS, etc., you will need to host a public registry for Skaffold to use to push images to. Once you create the repo for each service, point Skaffold at that registry:
+
+Here is an example using AWS ECR:
+
+```
+skaffold dev --default-repo=public.ecr.aws/<your_registry_here
+```
+
 ## Other Deployment Options
 
 If you'd like to check other deployment options,  please refer to [the original repository](https://github.com/GoogleCloudPlatform/microservices-demo#other-deployment-options).  
@@ -134,6 +149,8 @@ Find **Protocol Buffers Descriptions** at the [`./pb` directory](./pb).
   All services are instrumented and sending the generated traces to the OpenTelemetry Collector via gRPC. The received traces are then exported to the logs and to Jaeger.
 - **[Jager](https://www.jaegertracing.io):**  
   All generated traces are being sent to Jaeger.
+- **[Prometheus](https://prometheus.io):**  
+  All generated traces metrics via Otel's span-metric-processor are sent to Prometheus.
 - **[Skaffold](https://skaffold.dev):**  
   Application is deployed to Kubernetes with a single command using Skaffold.
 - **Synthetic Load Generation:**  
