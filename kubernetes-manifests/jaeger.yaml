@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: jaeger
+  namespace: online-boutique
 spec:
   selector:
     matchLabels:
@@ -15,7 +16,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: jaeger
-        image: jaegertracing/all-in-one:1.31
+        image: jaegertracing/all-in-one:latest
         env:
         - name: COLLECTOR_ZIPKIN_HOST_PORT
           value: ":9411"
@@ -45,6 +46,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: jaeger
+  namespace: online-boutique
 spec:
   type: ClusterIP
   selector:
@@ -82,6 +84,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: jaeger-frontend
+  namespace: online-boutique
 spec:
   type: NodePort
   selector:

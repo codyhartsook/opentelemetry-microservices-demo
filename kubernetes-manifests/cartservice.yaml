@@ -16,6 +16,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cartservice
+  namespace: online-boutique
 spec:
   selector:
     matchLabels:
@@ -27,6 +28,7 @@ spec:
     spec:
       serviceAccountName: default
       terminationGracePeriodSeconds: 5
+      restartPolicy: Always
       containers:
       - name: server
         image: cartservice
@@ -60,6 +62,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: cartservice
+  namespace: online-boutique
 spec:
   type: ClusterIP
   selector:

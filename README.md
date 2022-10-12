@@ -4,7 +4,7 @@
 
 ---
 
-## This microservice demo application has been forked from @julianocosta89's repo to add span-metric processing cababilities. Building upon Juliano's Otel integration, I have included a Prometheus manifest configured for remote-writing. Additionally, the Otel pipeline has been updated to include a span-metrics-processor, enabling span performance profiling. 
+## This microservice demo application has been forked from @julianocosta89's repo to add span-metric processing capabilities. Building upon Juliano's Otel integration, I have included a Prometheus manifest configured for remote-writing. Additionally, the Otel pipeline has been updated to include a span-metrics-processor, enabling span performance profiling. 
 All the services had their OpenCensus, Cloud Operations (Stackdriver) removed. Only OpenTelemetry Traces were added.   
 
 ---

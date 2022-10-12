@@ -46,11 +46,14 @@ build:
     context: src/adservice
   - image: otelcollector
     context: src/otelcollector
+  - image: prometheus
+    context: src/prometheus
   tagPolicy:
     gitCommit: {}
   local:
     useBuildkit: false
 deploy:
+  statusCheckDeadlineSeconds: 300
   kubectl:
     manifests:
     - ./kubernetes-manifests/adservice.yaml
