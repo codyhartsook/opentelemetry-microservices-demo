@@ -103,7 +103,7 @@ skaffold dev
 Here is an example using AWS ECR:
 
 ```
-skaffold dev --default-repo=public.ecr.aws/<your_registry_here
+skaffold --platform linux/amd64 dev --default-repo=642677561837.dkr.ecr.us-east-2.amazonaws.com --cleanup=false
 ```
 
 ## Other Deployment Options

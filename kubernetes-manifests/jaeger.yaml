@@ -4,6 +4,7 @@ metadata:
   name: jaeger
   namespace: online-boutique
 spec:
+  replicas: 3
   selector:
     matchLabels:
       app: jaeger
@@ -16,7 +17,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: jaeger
-        image: jaegertracing/all-in-one:latest
+        image: jaegertracing/all-in-one:1.38.1
         env:
         - name: COLLECTOR_ZIPKIN_HOST_PORT
           value: ":9411"
@@ -32,14 +33,15 @@ spec:
         - containerPort: 14250
         - containerPort: 14268
         - containerPort: 14269
+        - containerPort: 16685
         - containerPort: 16686
         - containerPort: 9411
         resources:
           requests:
-            cpu: 200m
-            memory: 180Mi
+            cpu: 500m
+            memory: 250Mi
           limits:
-            cpu: 300m
+            cpu: 550m
             memory: 300Mi
 ---
 apiVersion: v1
@@ -76,6 +78,9 @@ spec:
   - name: "14269"
     port: 14269
     targetPort: 14269
+  - name: "16685"
+    port: 16685
+    targetPort: 16685
   - name: "9411"
     port: 9411
     targetPort: 9411
@@ -83,7 +88,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: jaeger-frontend
+  name: jaeger-frontend-np
   namespace: online-boutique
 spec:
   type: NodePort
@@ -93,3 +98,21 @@ spec:
   - name: "16686"
     port: 16686
     targetPort: 16686
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jaeger-frontend-lb
+  namespace: online-boutique
+spec:
+  type: LoadBalancer
+  selector:
+    app: jaeger
+  ports:
+  - name: "16686-lb"
+    port: 16686
+    targetPort: 16686
+  - name: "16685-lb"
+    port: 16685
+    targetPort: 16685
