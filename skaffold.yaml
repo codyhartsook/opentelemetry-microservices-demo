@@ -48,6 +48,8 @@ build:
     context: src/otelcollector
   - image: prometheus
     context: src/prometheus
+  - image: aws-power-exporter
+    context: src/compute-power-modelling/aws
   tagPolicy:
     gitCommit: {}
   local:
@@ -68,6 +70,7 @@ deploy:
     - ./kubernetes-manifests/productcatalogservice.yaml
     - ./kubernetes-manifests/prometheus.yaml
     - ./kubernetes-manifests/nodeexporter.yaml
+    - ./kubernetes-manifests/awspowerexporter.yaml
     - ./kubernetes-manifests/recommendationservice.yaml
     - ./kubernetes-manifests/redis.yaml
     - ./kubernetes-manifests/shippingservice.yaml

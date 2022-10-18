@@ -1,0 +1,52 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: power-exporter
+  namespace: online-boutique
+  labels:
+    app: power-exporter
+spec:
+  selector:
+    app: power-exporter
+  ports:
+  - name: power-exporter
+    port: 9877
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: power-exporter-v1
+  namespace: online-boutique
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: power-exporter
+  template:
+    metadata:
+      labels:
+        app: power-exporter
+    spec:
+      serviceAccountName: monitoring-service-account
+      containers:
+        - name: exporter
+          image: aws-power-exporter
+          imagePullPolicy: Always
+          env:
+            - name: POLLING_INTERVAL_SECONDS
+              value: "30"
+            - name: EXPORTER_PORT
+              value: "9877"
+            - name: PROMETHEUS_HOST
+              value: prometheus:9090
+          ports:
+            - containerPort: 9877
+              name: http
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
